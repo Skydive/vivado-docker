@@ -48,7 +48,8 @@ docker run \
   -v /run/opengl-driver-32:/run/opengl-driver-32:ro \
   --net=host \
   --device /dev/dri \
-  xilinx-vivado:${VIVADO_VERSION} \
+  --device /dev/bus/usb/003/010 \
+  xilinx-vivado:${VIVADO_VERSION}-digilent \
   /bin/bash -c \
     "env \
       _JAVA_AWT_WM_NONREPARENTING=1 AWT_TOOLKIT=MToolkit \

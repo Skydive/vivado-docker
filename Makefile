@@ -12,7 +12,7 @@ VIVADO_VERSION := "2025.1"
 
 CONTAINER_INSTALL_TARGET_DIR := /opt/Xilinx
 
-SHELL := /bin/bash
+SHELL := /usr/bin/env bash
 
 all:
 	@echo "HOST_TOOL_ARCHIVE_NAME       : ${HOST_TOOL_ARCHIVE_NAME} (must be nonempty!)"
@@ -44,6 +44,12 @@ build.stamp: docker/Dockerfile Makefile install_config.txt
 		--build-arg VIVADO_VERSION=${VIVADO_VERSION} \
 		-f $< .
 	touch $@
+
+digilent:
+	env DOCKER_BUILDKIT=1 docker build \
+		-t xilinx-vivado:"${VIVADO_VERSION}-digilent" \
+		-f docker-digilent/Dockerfile --progress=plain .
+.PHONY: digilent
 
 xilinx-vivado.${VIVADO_VERSION}.docker.tgz: docker/Dockerfile Makefile install_config.txt
 	docker save > xilinx-vivado.${VIVADO_VERSION}.docker.tgz

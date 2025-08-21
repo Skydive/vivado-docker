@@ -88,13 +88,19 @@ RUN echo --- install_config.txt: \
     && cat $XILINX_INSTALL_LOCATION/tmp/install_config.txt \
     && echo ---
 
+RUN mkdir -p "/root/.Xilinx"
+COPY wi_authentication_key /root/.Xilinx
+RUN echo --- wi_authentication_key -> /root/.Xilinx: \
+    && cat /root/.Xilinx/wi_authentication_key \
+    && echo ---
+
 # Unpack the archive locally.
 RUN cd $XILINX_INSTALL_LOCATION/tmp \
 	&& tar -xf $(basename $HOST_TOOL_ARCHIVE_NAME) \
 	&& cd "$XILINX_INSTALL_LOCATION/tmp/`basename --suffix=$HOST_TOOL_ARCHIVE_EXTENSION $HOST_TOOL_ARCHIVE_NAME`"
 
 RUN cd "$XILINX_INSTALL_LOCATION/tmp/`basename --suffix=$HOST_TOOL_ARCHIVE_EXTENSION $HOST_TOOL_ARCHIVE_NAME`" \
-    &&./xsetup --config $XILINX_INSTALL_LOCATION/tmp/install_config.txt \
+    && ./xsetup --config $XILINX_INSTALL_LOCATION/tmp/install_config.txt \
 		--batch Install \
 		--location /opt/Xilinx \
 		--agree XilinxEULA,3rdPartyEULA \
